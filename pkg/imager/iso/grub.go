@@ -86,14 +86,14 @@ func CreateGRUB(printf func(string, ...any), options GRUBOptions) error {
 
 	printf("creating ISO image")
 
-	return grubMkrescue(options.OutPath, options.ScratchDir)
+	return grubMkrescue(options)
 }
 
-func grubMkrescue(isoPath, scratchPath string) error {
+func grubMkrescue(options GRUBOptions) error {
 	args := []string{
 		"--compress=xz",
-		"--output=" + isoPath,
-		scratchPath,
+		"--output=" + options.OutPath,
+		options.ScratchDir,
 	}
 
 	if epoch, ok, err := utils.SourceDateEpoch(); err != nil {
@@ -106,6 +106,7 @@ func grubMkrescue(isoPath, scratchPath string) error {
 
 		args = append(args,
 			"--",
+			"-V", fmt.Sprintf("TalosBoot-%s", options.Version),
 			"-volume_date", "all_file_dates", fmt.Sprintf("=%d", epoch),
 			"-volume_date", "uuid", time.Unix(epoch, 0).Format("2006010215040500"),
 		)

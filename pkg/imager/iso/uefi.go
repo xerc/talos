@@ -187,15 +187,11 @@ func CreateUEFI(printf func(string, ...any), options UEFIOptions) error {
 
 	if _, err := cmd.Run(
 		"xorriso",
-		"-as",
-		"mkisofs",
-		"-V",
-		"Talos Secure Boot ISO",
-		"-e",
-		"efiboot.img",
+		"-as", "mkisofs",
+		"-V", fmt.Sprintf("TalosBoot-%s", options.Version)
+		"-e", "efiboot.img",
 		"-no-emul-boot",
-		"-o",
-		options.OutPath,
+		"-o", options.OutPath,
 		options.ScratchDir,
 	); err != nil {
 		return err
